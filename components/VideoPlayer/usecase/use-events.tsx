@@ -26,10 +26,25 @@ const useEvents = () => {
   const handleKeyDown = (event: KeyboardEvent<HTMLVideoElement>) => {
     if (!videoRef.current) return
 
-    if (event.key === ']') {
+    const { key } = event
+    const skipDuration = 5
+
+    if (key === ']') {
       videoRef.current.playbackRate += 0.1;
-    } else if (event.key === '[') {
+      return
+    }
+
+    if (key === '[') {
       videoRef.current.playbackRate -= 0.1;
+      return
+    }
+
+    if (event.key === 'ArrowLeft') {
+      videoRef.current.currentTime = Math.max(videoRef.current.currentTime - skipDuration, 0);
+    }
+
+    if (event.key === 'ArrowRight') {
+      videoRef.current.currentTime = Math.min(videoRef.current.currentTime + skipDuration, videoRef.current.duration);
     }
 
     console.log('Playback Speed', videoRef.current.playbackRate)
