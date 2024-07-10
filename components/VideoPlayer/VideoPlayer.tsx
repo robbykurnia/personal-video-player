@@ -5,8 +5,6 @@ import { useEvents } from './usecase'
 const VideoPlayer: React.FC = () => {
   const { videoRef, videoSrc, handleFileChange, handleTimeUpdate, handleKeyDown } = useEvents();
 
-
-
   return (
     <div className='text-center'>
 
