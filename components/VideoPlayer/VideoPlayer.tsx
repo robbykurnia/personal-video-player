@@ -5,9 +5,20 @@ import { useEvents } from './usecase'
 const VideoPlayer: React.FC = () => {
   const { videoRef, videoSrc, handleFileChange, handleTimeUpdate, handleKeyDown } = useEvents();
 
+  // TODO: 
+  // 1. create directory thumbnail
+  // 2. create recent watch thumbnail
+
+
+  // const onChange = (e) => {
+  //   for (let i = 0; i < e.target.files.length; i++) {
+  //     console.log(e.target.files[i]);
+  //   }
+  // }
+
   return (
     <div className='text-center'>
-
+      {/* <input type="file" webkitdirectory="" directory="" accept="video/*" onChange={onChange}></input> */}
       {!videoSrc && (
         <>
           <p>Personal Video Player with history time, and shortcut keyboard playback speed &quot;[&quot; and &quot;]&quot;</p>
