@@ -22,6 +22,7 @@ const useEvents = () => {
   const handleTimeUpdate = () => {
     if (!videoRef?.current || !videoTitle) return
     const currentTime = videoRef.current.currentTime
+    setVideoTime(currentTime)
 
     const hasHistoriesKey = localStorage.getItem(HISTORIES_KEY)
     if (!hasHistoriesKey) {
