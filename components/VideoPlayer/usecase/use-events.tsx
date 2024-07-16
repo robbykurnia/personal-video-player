@@ -1,5 +1,6 @@
 "use client"
 
+import { HISTORIES_KEY, HistoryData } from "@/constants";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, KeyboardEvent } from 'react'
 
@@ -15,14 +16,36 @@ const useEvents = () => {
 
     const url = URL.createObjectURL(file);
     setVideoSrc(url);
-    setVideoTitle(`X-${file.name}`);
+    setVideoTitle(file.name);
   };
 
   const handleTimeUpdate = () => {
     if (!videoRef?.current || !videoTitle) return
-    setVideoTime(videoRef.current.currentTime)
+    const currentTime = videoRef.current.currentTime
 
-    localStorage.setItem(videoTitle, videoRef.current.currentTime.toString());
+    const hasHistoriesKey = localStorage.getItem(HISTORIES_KEY)
+    if (!hasHistoriesKey) {
+      const payload = [{ title: videoTitle, lastTime: currentTime, dateModified: new Date() }]
+      localStorage.setItem(HISTORIES_KEY, JSON.stringify(payload))
+
+      return
+    }
+
+    const videoHistories = JSON.parse(hasHistoriesKey) as HistoryData[]
+    const indexVideoHistory = videoHistories.findIndex(history => history.title === videoTitle)
+
+    if (indexVideoHistory === -1) {
+      const payload = [...videoHistories, { title: videoTitle, lastTime: currentTime, dateModified: new Date() }]
+      localStorage.setItem(HISTORIES_KEY, JSON.stringify(payload))
+
+      return
+    }
+
+    videoHistories[indexVideoHistory].lastTime = currentTime
+    videoHistories[indexVideoHistory].dateModified = new Date()
+
+    const payload = JSON.stringify(videoHistories)
+    localStorage.setItem(HISTORIES_KEY, payload)
 
   };
 
@@ -54,10 +77,19 @@ const useEvents = () => {
   useEffect(() => {
     if (!videoTitle) return
 
-    const savedTime = localStorage.getItem(videoTitle);
+    const hasHistoriesKey = localStorage.getItem(HISTORIES_KEY)
+    if (!hasHistoriesKey) return
+
+    const videoHistories = JSON.parse(hasHistoriesKey) as HistoryData[]
+    const indexVideoHistory = videoHistories.findIndex(history => history.title === videoTitle)
+
+    if (indexVideoHistory === -1) return
+
+    const savedTime = videoHistories[indexVideoHistory].lastTime
+
     if (!savedTime || !videoRef.current) return
 
-    videoRef.current.currentTime = parseFloat(savedTime);
+    videoRef.current.currentTime = savedTime;
   }, [videoTitle])
 
   return { videoRef, videoSrc, handleFileChange, handleTimeUpdate, handleKeyDown }

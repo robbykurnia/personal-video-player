@@ -1,5 +1,6 @@
 "use client"
 
+import Histories from '@/components/Histories';
 import { useEvents } from './usecase'
 
 const VideoPlayer: React.FC = () => {
@@ -17,13 +18,13 @@ const VideoPlayer: React.FC = () => {
   // }
 
   return (
-    <div className='text-center'>
+    <div className='text-center space-y-4'>
       {/* <input type="file" webkitdirectory="" directory="" accept="video/*" onChange={onChange}></input> */}
       {!videoSrc && (
         <>
           <p>Personal Video Player with history time, and shortcut keyboard playback speed &quot;[&quot; and &quot;]&quot;</p>
           <input type="file" accept="video/*" onChange={handleFileChange} />
-
+          <Histories />
         </>
       )}
 
