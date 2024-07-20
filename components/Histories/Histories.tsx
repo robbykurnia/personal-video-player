@@ -7,7 +7,17 @@ const Histories = () => {
         const data = localStorage.getItem(HISTORIES_KEY)
         if (!data) return
 
-        setHistories(JSON.parse(data))
+        const historiesData = (JSON.parse(data) as HistoryData[]).sort((a, b) => {
+            if (a.dateModified < b.dateModified) {
+                return 1;
+            }
+            if (a.dateModified > b.dateModified) {
+                return -1;
+            }
+            return 0
+        })
+
+        setHistories(historiesData)
 
 
     }, [])
